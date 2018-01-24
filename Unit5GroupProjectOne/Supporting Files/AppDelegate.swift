@@ -16,6 +16,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
+        FileManagerHelper.manager.loadCollectionNames()
+        FileManagerHelper.manager.loadCollections()
+        
         let tabBar = TabBarController()
         
         window = UIWindow(frame: UIScreen.main.bounds)
@@ -41,6 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        
+        let _ = LocationService.manager.checkAuthorizationStatusAndLocationServices()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
