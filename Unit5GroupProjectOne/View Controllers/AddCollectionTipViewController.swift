@@ -10,7 +10,7 @@ import UIKit
 
 class AddCollectionTipViewController: UIViewController {
     
-    let cellSpacing: CGFloat = UIScreen.main.bounds.width * 0.025
+    private let cellSpacing: CGFloat = UIScreen.main.bounds.width * 0.025
     
     let addTipView = AddCollectionTipView()
     var venue: Venue!
@@ -164,8 +164,6 @@ extension AddCollectionTipViewController: UICollectionViewDataSource {
         
         return cell
     }
-    
-    
 }
 
 extension AddCollectionTipViewController: UICollectionViewDelegateFlowLayout {

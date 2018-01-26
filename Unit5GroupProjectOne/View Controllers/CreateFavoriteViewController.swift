@@ -23,6 +23,8 @@ class CreateFavoriteViewController: UIViewController {
         return tf
     }()
     
+    let favoriteVC = FavoriteCollectionViewController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         favoriteTextField.delegate = self

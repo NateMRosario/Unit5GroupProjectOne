@@ -15,15 +15,8 @@ import Kingfisher
 
 class AddCollectionTipView: UIView {
     
-    let radius: CGFloat = 5.0
-    //to do:
-        //should have a collection view at the bottom, and some stuff at the top
-        //should have a textfield at the top which takes in the collection name
-        //should have a "leave a tip" label
-        //and below it should be a text view that lets you write/edit tips
-        //create properties and initializers
+    private let radius: CGFloat = 5.0
     
-        //maybe name the collection view the bottom view?
     lazy var venueTipCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let cv = UICollectionView(frame: frame, collectionViewLayout: layout)
@@ -60,6 +53,7 @@ class AddCollectionTipView: UIView {
     }()
     lazy var venueTipTextView: UITextView = {
         let textView = UITextView()
+        textView.font = UIFont(name: "Montserrat-Light", size: 20)
         textView.layer.borderWidth = 1
         makeCornerRadius(view: textView)
         return textView

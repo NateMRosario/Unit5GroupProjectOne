@@ -24,19 +24,43 @@ class FavoriteCollectionViewController: UIViewController {
             favoriteView.venueCollectionView.reloadData()
         }
     }
+    lazy var emptyView = EmptyView(frame: self.view.safeAreaLayoutGuide.layoutFrame)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         favoriteView.venueCollectionView.dataSource = self
         favoriteView.venueCollectionView.delegate = self
         constraints()
-        navigationItem.title = "My Collection"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createCollection))
-        navigationController?.navigationBar.tintColor = UIColor(red: 0.67, green: 0.07, blue: 0.50, alpha: 1)
+        configureNav()
+        if !collections.isEmpty {
+            showToast()
+        }
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         collectionNames = FileManagerHelper.manager.getCollectionNames()
         collections = FileManagerHelper.manager.getCollections()
+        viewSelector(collection: collections)
+    }
+    
+    private func configureNav() {
+        navigationItem.title = "My Collection"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createCollection))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "infoIcon"), style: .plain, target: self, action: #selector(infoButton))
+        navigationController?.navigationBar.tintColor = UIColor(red: 0.67, green: 0.07, blue: 0.50, alpha: 1)
+    }
+    @objc private func infoButton() {
+        showToast()
+    }
+    private func showToast() {
+        let label = favoriteView.toastLabel
+        UIView.animate(withDuration: 2.5, delay: 0.1, options: .curveEaseOut, animations: {
+            label.alpha = 1
+        }, completion: {(isCompleted) in
+            UIView.animate(withDuration: 2.0, animations: {
+                label.alpha = 0
+            })
+        })
     }
     @objc private func createCollection() {
         let modalVC = CreateFavoriteViewController()
@@ -49,6 +73,15 @@ class FavoriteCollectionViewController: UIViewController {
         let safe = view.safeAreaLayoutGuide
         favoriteView.snp.makeConstraints { (view) in
             view.top.bottom.leading.trailing.equalTo(safe)
+        }
+    }
+    private func viewSelector(collection: [[VenueTipModel]]) {
+        if collection.isEmpty {
+            emptyView.configureView(withText: "No Collections Saved Yet")
+            self.view.addSubview(emptyView)
+        } else {
+            self.emptyView.removeFromSuperview()
+            self.view.layoutSubviews()
         }
     }
 }
@@ -96,7 +129,7 @@ extension FavoriteCollectionViewController: UICollectionViewDelegate, UICollecti
             
             self.collections = FileManagerHelper.manager.getCollections()
             self.collectionNames = FileManagerHelper.manager.getCollectionNames()
-            
+            self.viewSelector(collection: self.collections)
             self.favoriteView.venueCollectionView.reloadData()
         }))
         alert.addAction(UIAlertAction(title: "Edit", style: .default, handler: { (_) in
@@ -142,7 +175,6 @@ extension FavoriteCollectionViewController: UICollectionViewDelegate, UICollecti
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
-    
 }
 extension FavoriteCollectionViewController: UICollectionViewDelegateFlowLayout {
     
